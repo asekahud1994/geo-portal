@@ -21,13 +21,14 @@
 </div>
 
 
-
 <script>
     require([
         "esri/Map",
         "esri/views/MapView",
-        "esri/layers/FeatureLayer"
-    ], function (Map, MapView, FeatureLayer) {
+        "esri/widgets/Home",
+        "esri/widgets/LayerList",
+        "esri/layers/MapImageLayer",
+    ], function (Map, MapView, Home, LayerList, MapImageLayer) {
 
         const map = new Map({
             basemap: "topo-vector",
@@ -56,13 +57,39 @@
                 " | Zoom " + view.zoom;
         }
 
-        view.watch("stationary", function(isStationary) {
+        view.watch("stationary", function (isStationary) {
             showCoordinates(view.center);
         });
 
-        view.on("pointer-move", function(evt) {
-            showCoordinates(view.toMap({ x: evt.x, y: evt.y }));
+        view.on("pointer-move", function (evt) {
+            showCoordinates(view.toMap({x: evt.x, y: evt.y}));
         });
+
+        const homeWidget = new Home({
+            view: view
+        });
+
+        view.ui.add(homeWidget, "top-left");
+
+        const layerList = new LayerList({
+            view: view
+        });
+        // Adds the widget below other elements in the top left corner of the view
+        view.ui.add(layerList, {
+            position: "top-right"
+        });
+
+        const layer = new MapImageLayer({
+            title: 'Программа управления государственным фондом недр (ПУГФН)',
+            url: "https://stix.geology.kz:6443/arcgis/rest/services/PUGFN/MapServer?f=jsapi"
+        });
+        map.add(layer);
+
+        const blockLayer = new MapImageLayer({
+            title: 'Карта идентификации блоков',
+            url: "https://stix.geology.kz:6443/arcgis/rest/services/test_block/MapServer?f=jsapi"
+        });
+        map.add(blockLayer);
 
     });
 </script>
