@@ -28,7 +28,8 @@
         "esri/widgets/Home",
         "esri/widgets/LayerList",
         "esri/layers/MapImageLayer",
-    ], function (Map, MapView, Home, LayerList, MapImageLayer) {
+        "esri/layers/GeoJSONLayer",
+    ], function (Map, MapView, Home, LayerList, MapImageLayer, GeoJSONLayer) {
 
         const map = new Map({
             basemap: "topo-vector",
@@ -90,6 +91,12 @@
             url: "https://stix.geology.kz:6443/arcgis/rest/services/test_block/MapServer?f=jsapi"
         });
         map.add(blockLayer);
+
+        const geojsonLayer = new GeoJSONLayer({
+            url: 'lib/myMap.geojson',
+            copyright: "asekahud",
+        });
+        map.add(geojsonLayer);
 
     });
 </script>
